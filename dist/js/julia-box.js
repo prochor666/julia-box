@@ -45,7 +45,7 @@ var JuliaBoxItem = function(options)
         root: $('body'),
         sources: {},
         thumbs: false,
-        timeout: 5,
+        timeout: 7,
         videoAutoplay: true,
     };
 
@@ -270,6 +270,209 @@ var JuliaBox = function(options)
 
 /* *****************************************
 * Julia HTML5 lightbox
+* User interface
+* complete DOM model
+****************************************** */
+JuliaBoxItem.prototype._Ui = function(origin)
+{
+    var self = this;
+
+
+
+
+    self.create = function()
+    {
+        if( origin.env.instance.lemgth > 0 )
+        {
+            origin.env.instance.remove();
+        }
+
+        // Main container
+        origin.env.instance = $('<div class="julia-box julia-fullscreen-off" id="julia-box-'+origin.env.ID+'">'
+                    +'</div>');
+
+        // Containers
+        origin.env.model.wrapper = $('<div class="julia-wrapper" id="julia-wrapper-'+origin.env.ID+'"></div>');
+
+        origin.env.model.content = $('<div class="julia-content" id="julia-content-'+origin.env.ID+'"></div>');
+
+        origin.env.model.toolbar = $('<div class="julia-toolbar" id="julia-toolbar-'+origin.env.ID+'"></div>');
+
+        origin.env.model.preloader = $('<div class="julia-preloader on"></div>');
+
+        // Buttons
+        origin.env.model.buttons.play = $('<button class="julia-btn julia-playback play">'
+        +'    <i class="julia-icon julia-play"></i>'
+        +'</button>');
+
+        origin.env.model.buttons.next = $('<button class="julia-btn julia-next" title="'+origin.env.i18n.next+'">'
+        +'    <i class="julia-icon julia-chevron-right"></i>'
+        +'</button>');
+
+        origin.env.model.buttons.previous = $('<button class="julia-btn julia-previous" title="'+origin.env.i18n.previous+'">'
+        +'    <i class="julia-icon julia-chevron-left"></i>'
+        +'</button>');
+
+        origin.env.model.buttons.close = $('<button class="julia-btn julia-close" title="'+origin.env.i18n.close+'">'
+        +'    <i class="julia-icon julia-close"></i>'
+        +'</button>');
+
+        origin.env.model.buttons.fullscreen = $('<button class="julia-btn julia-fullscreen-toggle">'
+        +'    <i class="julia-icon julia-fullscreen-on"></i>'
+        +'</button>');
+
+        // Passive info panels
+        origin.env.model.panels.fileName = $('<div class="julia-panel julia-file-name">'
+        +'    <span>{{file-name}}</span>'
+        +'</div>');
+
+        origin.env.model.panels.fileDescription = $('<div class="julia-panel julia-file-description">'
+        +'    <span>{{file-description}}</span>'
+        +'</div>');
+
+        origin.env.model.panels.summary = $('<div class="julia-panel julia-summary">'
+        +'    <span>{{summary}}</span>'
+        +'</div>');
+
+        // Compose content DOM object
+        origin.env.model.content
+        .append([
+            origin.env.model.preloader,
+        ]);
+
+        // Compose toolbar DOM object
+
+        if( origin.env.last > 0 )
+        {
+            origin.env.model.toolbar
+            .append([
+                origin.env.model.buttons.previous,
+                origin.env.model.buttons.next,
+            ]);
+        }
+
+        origin.env.model.toolbar
+        .append([
+            origin.env.model.buttons.close
+        ]);
+
+        // Compose wrapper DOM object
+        origin.env.model.wrapper
+        .append([
+            origin.env.model.toolbar,
+            origin.env.model.content
+        ]);
+
+        // Compose final DOM object
+        origin.env.instance
+        .append([
+            origin.env.model.wrapper
+        ]);
+
+        self.zIndexize();
+
+        origin.env.root.append( origin.env.instance );
+
+        origin.env.fullscreenFrame = document.querySelector('#julia-box-'+origin.env.ID);
+
+        origin.Ui.state(origin.env.instance, '', 'on');
+
+        self.raiseEvent('julia.ui-ready');
+
+        origin.Base.debug({
+            'boxInstance': origin.env.instance,
+        });
+    };
+
+
+
+
+    self.raiseEvent = function(eventName)
+    {
+        setTimeout( function()
+        {
+            if( $('#julia-box-'+origin.env.ID).length == 1 )
+            {
+                $('#julia-box-'+origin.env.ID).trigger({
+                    type: eventName,
+                });
+            }else{
+                self.raiseEvent(eventName);
+            }
+        }, 10);
+    };
+
+
+
+
+    self.icon = function(element, remove, add)
+    {
+        element.find('i')
+        .removeClass(remove)
+        .addClass(add);
+    };
+
+
+
+
+    self.state = function(element, remove, add)
+    {
+        element.removeClass(remove)
+        .addClass(add);
+    };
+
+
+
+
+    self.panel = function(element, value)
+    {
+        element.find('span').text(value);
+    };
+
+
+
+
+    self.zIndexize = function()
+    {
+        var indexHighest = 0;
+
+        $("*").each(function()
+        {
+            // always use a radix when using parseInt
+            var _current = parseInt( $(this).css("z-index"), 10 );
+
+            if( _current > indexHighest )
+            {
+                indexHighest = _current;
+            }
+        });
+
+        origin.Base.debug({
+            'Highest z-index': indexHighest
+        });
+
+        origin.env.instance.css({
+            'z-index': indexHighest + 1
+        });
+
+        origin.env.model.content.css({
+            'z-index': indexHighest + 2
+        });
+
+        origin.env.model.toolbar.css({
+            'z-index': indexHighest + 3
+        });
+
+        origin.env.model.preloader.css({
+            'z-index': indexHighest + 4
+        });
+
+    };
+
+};
+
+/* *****************************************
+* Julia HTML5 lightbox
 * Callback
 * event callbacks
 ****************************************** */
@@ -405,6 +608,372 @@ JuliaBoxItem.prototype._Controls = function(origin)
         return;
     };
 
+};
+
+/* *****************************************
+* Julia HTML5 lightbox
+* Suppport utilities
+****************************************** */
+JuliaBoxItem.prototype._Support = function(origin)
+{
+    var self = this;
+
+
+
+
+    self.aspect = function(w,h)
+    {
+        return w>0 && h>0 ? h/w: 0;
+    };
+
+
+
+
+    self.isMobile = function()
+    {
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile/i.test(navigator.userAgent) )
+        {
+            return true;
+        }
+
+        return false;
+    };
+
+
+
+
+    self.iOS = function()
+    {
+        if( /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream )
+        {
+            return true;
+        }
+
+        return false;
+    };
+
+
+
+
+    self.extension = function()
+    {
+        e = (/[.]/.exec( origin.env.item.attr( origin.env.attr ) ) ) ? /[^.]+$/.exec( origin.env.item.attr( origin.env.attr ) ) : ['', 'undefined', ''];
+        return e[0];
+    };
+
+
+
+
+    self.iframe = function( iframeSrc, serviceClass )
+    {
+        return $('<div class="julia-iframe-container julia-box-'+serviceClass+'"><iframe frameborder="0" width="100%" height="100%" allowfullscreen src="' + iframeSrc + '"/></div>');
+    };
+
+
+
+
+    self.initiator = function()
+    {
+        l = origin.env.root.find('[data-julia-box-initiator]').length;
+        return !l ? 0: l;
+    };
+
+
+
+
+    self.isUrlValid = function(url)
+    {
+        return url.match("^\/");
+    }
+
+
+
+
+    self.isDOMElement = function( obj )
+    {
+        var _checkInstance = function(elem)
+        {
+            if( ( elem instanceof jQuery && elem.length ) || elem instanceof HTMLElement )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        if( obj instanceof HTMLCollection && obj.length )
+        {
+                for( var a = 0, len = obj.length; a < len; a++ )
+                {
+
+                if( !_checkInstance( obj[a] ) )
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
+        } else {
+
+            return _checkInstance( obj );
+        }
+    };
+};
+
+/* *****************************************
+* Julia HTML5 lightbox
+* Media collection processing
+****************************************** */
+JuliaBoxItem.prototype._Media = function(origin)
+{
+    var self = this;
+
+
+
+
+    self.mediaService = function( target )
+    {
+        for( i in origin.env.services )
+        {
+            if( !!origin.env.services[i].test( target ) )
+            {
+                return i;
+            }
+        }
+
+        if( origin.Support.isUrlValid( target ) )
+        {
+            return 'iframe';
+        }
+
+        return 'inline';
+    };
+
+
+
+
+    self.getMedia = function()
+    {
+        var mediaService = 'inline';
+        var mediaStr = '';
+
+        if( typeof origin.env.item.attr( origin.env.attr ) !== undefined && origin.env.item.attr( origin.env.attr ) !== false )
+        {
+            mediaStr = origin.env.item.attr( origin.env.attr );
+            mediaService = self.mediaService( mediaStr );
+        }
+
+
+        switch( mediaService )
+        {
+            case 'image':
+
+                origin.env.itemType = 'image';
+                origin.env.mediaObj = $('<img src="'+mediaStr+'?_c='+Math.floor((Math.random()*10000000)+1)+'" alt="'+mediaStr+'">');
+
+            break; case 'youtube':
+
+                var matches = origin.env.services[mediaService].exec( mediaStr );
+                origin.env.itemType = 'iframe';
+
+                if( !!matches )
+                {
+                    iframeSrc = 'https://www.youtube' + (matches[2] || '') + '.com/embed/' + matches[4];
+
+                    if( origin.env.videoAutoplay === true )
+                    {
+                        iframeSrc += '?autoplay=1';
+                    }
+
+                    origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
+                }
+
+            break; case 'vimeo':
+
+                var matches = origin.env.services[mediaService].exec( mediaStr );
+                origin.env.itemType = 'iframe';
+
+                if( !!matches )
+                {
+                    iframeSrc = 'https://player.vimeo.com/video/' + matches[3];
+
+                    if( origin.env.videoAutoplay === true )
+                    {
+                        iframeSrc += '?autoplay=1';
+                    }
+
+                    origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
+                }
+
+            break; case 'googleMaps':
+
+                var matches = origin.env.services[mediaService].exec( mediaStr );
+                origin.env.itemType = 'iframe';
+
+                if( !!matches )
+                {
+                    iframeSrc = 'https://www.google.' + matches[3] + '/maps?' + matches[6];
+                    iframeSrc += matches[6].indexOf('layer=c') > 0 ? '&amp;output=svembed': '&amp;output=embed';
+
+                    origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
+                }
+
+            break; case 'facebookVideo':
+
+                var matches = origin.env.services[mediaService].exec( mediaStr );
+                origin.env.itemType = 'iframe';
+
+                if( !!matches )
+                {
+                    iframeSrc = 'https://www.facebook.com/plugins/video.php?href=' + mediaStr;
+
+                    if( origin.env.videoAutoplay === true )
+                    {
+                        iframeSrc += '&autoplay=1&show-captions=1';
+                    }
+
+                    origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
+                }
+
+                break; case 'iframe':
+
+                    var matches = origin.env.services[mediaService].exec( mediaStr );
+                    origin.env.itemType = 'iframe';
+
+                    if( !!matches || !!origin.Support.isUrlValid( mediaStr ) )
+                    {
+                        iframeSrc = mediaStr;
+                        origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
+                    }
+
+
+            break; default:
+
+                origin.env.itemType = 'inline';
+
+                if( origin.Support.isDOMElement( $(mediaStr) ) )
+                {
+                    origin.env.mediaObj = $('<div class="julia-inline-container">'+$(mediaStr).html()+'</div>');
+                }else{
+                    origin.env.mediaObj = $('<div class="julia-inline-container julia-error">'+origin.env.i18n.errorInline+'</div>');
+                }
+        }
+
+
+
+        // Create media object
+        origin.env.model.content.append( origin.env.mediaObj );
+
+        if( origin.env.itemType === 'inline' )
+        {
+
+            self.resize();
+            origin.Ui.state( origin.env.model.preloader, 'on', '' );
+            origin.Ui.state( origin.env.mediaObj, '', 'on' );
+
+        }else if( origin.env.itemType === 'image' )
+        {
+            origin.env.mediaObj.on('load error', function(e)
+            {
+                if( e.type == 'error' || ( $(this).width() === "undefined" || $(this).width() === 0 ) )
+                {
+                    origin.env.mediaObj = $('<div class="julia-inline-container julia-error">'+origin.env.i18n.errorImage+'</div>');
+                    origin.env.model.content.html( origin.env.mediaObj );
+                }
+
+                self.resize();
+                origin.Ui.state( origin.env.model.preloader, 'on', '' );
+                origin.Ui.state( origin.env.mediaObj, '', 'on' );
+            });
+
+        }else{
+
+            loaderEventHandler = origin.env.mediaObj.find('iframe');
+
+            loaderEventHandler.on('load error', function(e)
+            {
+                if( e.type == 'error' )
+                {
+                    origin.env.mediaObj = $('<div class="julia-inline-container julia-error">'+origin.env.i18n.errorIframe+'</div>');
+                    origin.env.model.content.html( origin.env.mediaObj );
+                }
+
+                self.resize();
+                origin.Ui.state( origin.env.model.preloader, 'on', '' );
+                origin.Ui.state( origin.env.mediaObj, '', 'on' );
+            });
+        }
+    };
+
+
+
+
+    self.resize = function()
+    {
+        mediaSize = self.setSize();
+
+        origin.env.mediaObj.width( mediaSize[0] );
+        origin.env.mediaObj.height( mediaSize[1] );
+        origin.env.mediaObj.css({'margin-top': (mediaSize[3] - mediaSize[1])/2 + 'px' });
+
+        origin.Base.debug({
+            'extension': origin.Support.extension(),
+            'item': origin.env.item,
+            'itemType': typeof origin.env.item,
+            'mediaObj': origin.env.mediaObj,
+            'mediaSize': mediaSize
+        });
+    };
+
+
+
+
+    self.setSize = function()
+    {
+        var ww = $(window).width();
+        var wh = $(window).height();
+        var tw = origin.env.mediaObjSize[0];
+        var th = origin.env.mediaObjSize[1];
+
+        if( ( tw == 0 || th == 0 ) && !origin.env.mediaObj.hasClass('julia-error') )
+        {
+            tw = origin.env.itemType === 'iframe' || origin.env.itemType === 'inline'  ? 1280: origin.env.mediaObj.width();
+            th = origin.env.itemType === 'iframe' || origin.env.itemType === 'inline' ? 720: origin.env.mediaObj.height();
+            origin.env.mediaObjSize = [tw,th];
+        }
+
+        ta = origin.Support.aspect( tw, th );
+
+        if( tw >= ww )
+        {
+            tw = ww - 20;
+
+            if( ( origin.env.itemType === 'iframe' || origin.env.itemType === 'inline' ) && tw > origin.env.iframeWidthLimit )
+            {
+                tw = origin.env.iframeWidthLimit;
+            }
+
+            th = tw * ta;
+        }
+
+        if( th >= (wh - 20) )
+        {
+            th = (wh - 10);
+            tw = th / ta;
+        }
+
+        // Normalize numbers
+        tw = parseInt( tw, 10 );
+        th = parseInt( th, 10 );
+
+        origin.Base.debug({
+            'window': [ ww, wh ],
+            'mediaObj': [ tw, th ]
+        });
+
+        return [tw, th, ww, wh];
+    };
 };
 
 /* *****************************************
@@ -679,6 +1248,50 @@ JuliaBoxItem.prototype._Fullscreen = function(origin)
             }, 5);
 
         });
+    };
+};
+
+/* *****************************************
+* Julia HTML5 lightbox
+* Persistent settings
+* options are stored in cookies
+****************************************** */
+JuliaBoxItem.prototype._Persist = function( origin )
+{
+    var self = this;
+
+    self.set = function( name, value, days )
+    {
+        dateObj = new Date();
+        dateObj.setTime( dateObj.getTime() + ( days*24*60*60*1000 ) );
+        var expires = 'expires=' + dateObj.toUTCString();
+        document.cookie = name + '=' + value + '; ' + expires + '; path=/';
+    };
+
+
+
+
+    self.get = function( name )
+    {
+        var name = name + '=';
+        var ca = document.cookie.split( ';' );
+
+        for( var i = 0; i < ca.length; i++ )
+        {
+            var c = ca[i];
+
+            while( c.charAt(0) == ' ' )
+            {
+                c = c.substring(1);
+            }
+
+            if( c.indexOf( name ) == 0 )
+            {
+                return c.substring( name.length, c.length );
+            }
+        }
+
+        return undefined;
     };
 };
 

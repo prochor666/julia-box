@@ -45,7 +45,7 @@ var JuliaBoxItem = function(options)
         root: $('body'),
         sources: {},
         thumbs: false,
-        timeout: 5,
+        timeout: 7,
         videoAutoplay: true,
     };
 
