@@ -1,0 +1,64 @@
+.julia-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: rgba( 0, 0, 0, 0 );
+    color: #000;
+    content: '';
+
+    &.julia-arrow-left {
+        background-image: url(../img/svg/arrow-left.svg);
+    }
+
+    &.julia-arrow-right {
+        background-image: url(../img/svg/arrow-right.svg);
+    }
+
+    &.julia-close {
+        background-image: url(../img/svg/close.svg);
+    }
+
+    &.julia-dot-menu {
+        background-image: url(../img/svg/dot-menu.svg);
+    }
+
+    &.julia-fullscreen-off {
+        background-image: url(../img/svg/fullscreen-off.svg);
+    }
+
+    &.julia-fullscreen-on {
+        background-image: url(../img/svg/fullscreen-on.svg);
+    }
+
+    &.julia-chevron-left {
+        background-image: url(../img/svg/chevron-left.svg);
+    }
+
+    &.julia-chevron-right {
+        background-image: url(../img/svg/chevron-right.svg);
+    }
+
+    &.julia-menu {
+        background-image: url(../img/svg/menu.svg);
+    }
+
+    &.julia-pause {
+        background-image: url(../img/svg/pause.svg);
+    }
+
+    &.julia-photo-slide {
+        background-image: url(../img/svg/photo-slide.svg);
+    }
+
+    &.julia-play {
+        background-image: url(../img/svg/play.svg);
+    }
+
+    &.julia-share {
+        background-image: url(../img/svg/share.svg);
+    }
+
+}

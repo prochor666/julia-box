@@ -1,0 +1,16 @@
+{
+    "name": "prochor666/julia-box",
+    "type": "library",
+    "description": "Responsive, mobile ready lightbox",
+    "keywords": ["html5","lightbox"],
+    "homepage": "https://github.com/prochor666/julia-box",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jan Prochazka",
+            "email": "prochor666@gmail.com",
+            "homepage": "http://multizone.cz",
+            "role": "Developer"
+        }
+    ]
+}
