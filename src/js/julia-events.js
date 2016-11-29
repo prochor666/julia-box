@@ -72,7 +72,7 @@ JuliaBoxItem.prototype._Events = function(origin)
         origin.env.model.content.on( 'click',  function(e)
         {
             e.stopPropagation();
-            if( $(e.target).is('.julia-content') &&  origin.options.overlayClose === true )
+            if( $(e.target).is('.julia-content') &&  origin.options.overlayActive === true )
             {
                 origin.Controls.press('close');
             }

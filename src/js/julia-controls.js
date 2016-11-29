@@ -73,7 +73,7 @@ JuliaBoxItem.prototype._Controls = function(origin)
                     origin.Callback.fn(origin.options.onClose, origin.env);
                 }
 
-                origin.env.instance.hide( 150, function()
+                origin.env.instance.hide( 75, function()
                 {
                     origin.Events.keysOff();
                     origin.env.instance.remove();

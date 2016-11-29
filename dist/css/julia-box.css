@@ -92,6 +92,8 @@ div.julia-box {
       right: 0;
       height: 52px;
       min-width: 200px; }
+      div.julia-box .julia-wrapper .julia-toolbar .julia-btn:hover {
+        opacity: .75; }
       div.julia-box .julia-wrapper .julia-toolbar .julia-btn.julia-previous {
         position: fixed;
         left: 10px;
@@ -162,10 +164,7 @@ div.julia-box {
 * === TRANSITIONS ===
 ******************************* */
 div.julia-box,
-div.julia-box div.julia-toolbar > button.julia-btn,
-div.julia-box div.julia-content > img,
-div.julia-box div.julia-content > div.julia-iframe-container,
-div.julia-box div.julia-content > div.julia-inline-container {
+div.julia-box div.julia-toolbar > button.julia-btn {
   -webkit-transition: all 220ms;
   -moz-transition: all 220ms;
   transition: all 220ms; }

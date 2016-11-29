@@ -41,7 +41,7 @@ var JuliaBoxItem = function(options)
         onInit: false,
         onNext: false,
         onPrevious: false,
-        overlayClose: true,
+        overlayActive: true,
         root: $('body'),
         sources: {},
         thumbs: false,
@@ -69,7 +69,7 @@ var JuliaBoxItem = function(options)
         mediaObj: $([]),
         mediaObjSize: [0,0],
         instance: {},
-        overlayClose: origin.options.overlayClose,
+        overlayActive: origin.options.overlayActive,
         videoAutoplay: origin.options.videoAutoplay,
         autoplay: origin.options.autoplay,
         autoplayControls: origin.options.autoplayControls,
@@ -584,7 +584,7 @@ JuliaBoxItem.prototype._Controls = function(origin)
                     origin.Callback.fn(origin.options.onClose, origin.env);
                 }
 
-                origin.env.instance.hide( 150, function()
+                origin.env.instance.hide( 75, function()
                 {
                     origin.Events.keysOff();
                     origin.env.instance.remove();
@@ -1050,7 +1050,7 @@ JuliaBoxItem.prototype._Events = function(origin)
         origin.env.model.content.on( 'click',  function(e)
         {
             e.stopPropagation();
-            if( $(e.target).is('.julia-content') &&  origin.options.overlayClose === true )
+            if( $(e.target).is('.julia-content') &&  origin.options.overlayActive === true )
             {
                 origin.Controls.press('close');
             }

@@ -74,6 +74,10 @@ div.julia-box {
 
             .julia-btn {
 
+                &:hover {
+                    opacity: .75;
+                }
+
                 &.julia-previous {
                     position: fixed;
                     left: 10px;
@@ -174,10 +178,10 @@ div.julia-box {
 * === TRANSITIONS ===
 ******************************* */
 div.julia-box,
-div.julia-box div.julia-toolbar>button.julia-btn,
+div.julia-box div.julia-toolbar>button.julia-btn/*,
 div.julia-box div.julia-content>img,
 div.julia-box div.julia-content>div.julia-iframe-container,
-div.julia-box div.julia-content>div.julia-inline-container
+div.julia-box div.julia-content>div.julia-inline-container*/
 {
     -webkit-transition: all 220ms;
     -moz-transition: all 220ms;
