@@ -2,8 +2,8 @@
 * Julia HTML5 lightbox
 *
 * @author prochor666@gmail.com
-* @version: 0.4.0
-* @build: 2016-11-27
+* @version: 0.4.1
+* @build: 2016-11-29
 * @license: MIT
 *
 * @requires:

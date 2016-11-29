@@ -2,8 +2,8 @@
 * Julia HTML5 lightbox
 *
 * @author prochor666@gmail.com
-* @version: 0.4.0
-* @build: 2016-11-27
+* @version: 0.4.1
+* @build: 2016-11-29
 * @license: MIT
 *
 * @requires:
@@ -56,29 +56,21 @@ var JuliaBoxItem = function(options)
 
     // Environment
     origin.env = {
+        attr: origin.options.attr,
+        autoplay: origin.options.autoplay,
+        autoplayControls: origin.options.autoplayControls,
         collection: origin.options.collection,
+        i18n: origin.options.i18n,
+        ID: __JULIA_INSTANCE__ID__,
+        iframeWidthLimit: origin.options.iframeWidthLimit,
+        initiator: false,
+        instance: {},
         item: origin.options.item,
         itemIndex: origin.options.itemIndex,
         itemType: 'inline',
         last: origin.options.collection.length - 1,
-        attr: origin.options.attr,
-        root: origin.options.root,
-        i18n: origin.options.i18n,
-        overflow: origin.options.root.css('overflow'),
-        iframeWidthLimit: origin.options.iframeWidthLimit,
         mediaObj: $([]),
         mediaObjSize: [0,0],
-        instance: {},
-        overlayActive: origin.options.overlayActive,
-        videoAutoplay: origin.options.videoAutoplay,
-        autoplay: origin.options.autoplay,
-        autoplayControls: origin.options.autoplayControls,
-        timeout: origin.options.timeout,
-        opener: false,
-        timer: false,
-        initiator: false,
-        ID: __JULIA_INSTANCE__ID__,
-        api: {},
         model: {
             wrapper: {},
             content: {},
@@ -87,6 +79,10 @@ var JuliaBoxItem = function(options)
             panels: {},
             preloader: {},
         },
+        overlayActive: origin.options.overlayActive,
+        opener: false,
+        overflow: origin.options.root.css('overflow'),
+        root: origin.options.root,
         services: {
             image: /(^data:image\/)|(\.(png|jpe?g|gif|svg|webp|bmp|ico|tiff?)(\?\S*)?$)/i,
             youtube: /(youtube(-nocookie)?\.com|youtu\.be)\/(watch\?v=|v\/|u\/|embed\/?)?([\w-]{11})(.*)?/i,
@@ -95,6 +91,9 @@ var JuliaBoxItem = function(options)
             facebookVideo: /(facebook\.com)\/([a-z0-9_-]*)\/videos\/([0-9]*)(.*)?$/i,
             iframe: /(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/i,
         }
+        timeout: origin.options.timeout,
+        timer: false,
+        videoAutoplay: origin.options.videoAutoplay,
     };
 
 
@@ -136,12 +135,6 @@ var JuliaBoxItem = function(options)
 
 
     origin.Events.init();
-
-
-    // Autostart play, if possible
-    if(origin.options.autoplay === true)
-    {
-    }
 
 
     // Define publicApi
