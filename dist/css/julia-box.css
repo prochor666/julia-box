@@ -85,7 +85,8 @@ div.julia-box {
       color: #FFF;
       margin: 0;
       font-size: 1px;
-      background: transparent; }
+      background: transparent;
+      outline: none; }
     div.julia-box .julia-wrapper .julia-toolbar {
       position: absolute;
       top: 0;
