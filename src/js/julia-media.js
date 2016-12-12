@@ -83,18 +83,30 @@ JuliaBoxItem.prototype._Media = function(origin)
                     origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
                 }
 
-            break; case 'googleMaps':
+                break; case 'googleMaps':
 
-                var matches = origin.env.services[mediaService].exec( mediaStr );
-                origin.env.itemType = 'iframe';
+                    var matches = origin.env.services[mediaService].exec( mediaStr );
+                    origin.env.itemType = 'iframe';
 
-                if( !!matches )
-                {
-                    iframeSrc = 'https://www.google.' + matches[3] + '/maps?' + matches[6];
-                    iframeSrc += matches[6].indexOf('layer=c') > 0 ? '&amp;output=svembed': '&amp;output=embed';
+                    if( !!matches )
+                    {
+                        iframeSrc = 'https://www.google.' + matches[3] + '/maps?' + matches[6];
+                        iframeSrc += matches[6].indexOf('layer=c') > 0 ? '&amp;output=svembed': '&amp;output=embed';
 
-                    origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
-                }
+                        origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
+                    }
+
+                break; case 'instagram':
+
+                    var matches = origin.env.services[mediaService].exec( mediaStr );
+                    origin.env.itemType = 'iframe';
+
+                    if( !!matches )
+                    {
+                        iframeSrc = 'https://www.instagram.com/p/' + matches[2] + '/embed/';
+
+                        origin.env.mediaObj = origin.Support.iframe( iframeSrc, mediaService );
+                    }
 
             break; case 'facebookVideo':
 
@@ -220,7 +232,7 @@ JuliaBoxItem.prototype._Media = function(origin)
             origin.env.mediaObjSize = [tw,th];
         }
 
-        ta = origin.Support.aspect( tw, th );
+        ta =origin.Support.aspect( tw, th );
 
         if( tw >= ww )
         {
@@ -238,6 +250,14 @@ JuliaBoxItem.prototype._Media = function(origin)
         {
             th = (wh - 10);
             tw = th / ta;
+        }
+
+        mediaService = self.mediaService( origin.env.item.attr( origin.env.attr ) );
+
+        // BAD BAD FIX!!!
+        if( mediaService === 'instagram' )
+        {
+            tw = th - 100;
         }
 
         // Normalize numbers
