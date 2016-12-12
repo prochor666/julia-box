@@ -975,6 +975,11 @@ JuliaBoxItem.prototype._Media = function(origin)
         if( mediaService === 'instagram' )
         {
             tw = th - 100;
+
+            if( ww < 400 && ww < wh ) {
+                tw = tw + 100;
+                th = th + 100;
+            }
         }
 
         // Normalize numbers
