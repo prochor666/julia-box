@@ -89,7 +89,6 @@ var JuliaBoxItem = function(options)
             vimeo:  /(vimeo(pro)?\.com)\/(?:[^\d]+)?(\d+)\??(.*)?$/,
             googleMaps: /((maps|www)\.)?google\.([^\/\?]+)\/?((maps\/?)?\?)(.*)/i,
             facebookVideo: /(facebook\.com)\/([a-z0-9_-]*)\/videos\/([0-9]*)(.*)?$/i,
-            //instagram: /(instagram\.com)\/p\/([0-9]*)(.*)?$/i,
             instagram: /(instagram\.com)\/p\/([^\/]+)\/(\?\S*)?$/i,
             iframe: /(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/i,
         },
