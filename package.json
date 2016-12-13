@@ -1,0 +1,24 @@
+{
+  "name": "juliabox",
+  "version": "1.0.1",
+  "description": "Responsive, mobile ready lightbox",
+  "main": "dist/js/julia-box.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prochor666/julia-box.git"
+  },
+  "keywords": [
+    "lightbox",
+    "responsive",
+    "lightweight"
+  ],
+  "author": "prochor666",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/prochor666/julia-box/issues"
+  },
+  "homepage": "https://github.com/prochor666/julia-box#readme"
+}
