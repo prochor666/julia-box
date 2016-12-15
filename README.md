@@ -10,6 +10,7 @@ How to establish devel environment.
     - SASS package [gulp-sass](https://www.npmjs.com/package/gulp-sass)
     - CSS minify package [gulp-clean-css](https://www.npmjs.com/package/gulp-clean-css)
     - JavaScript minify package [gulp-minify](https://www.npmjs.com/package/gulp-minify)
+    - Concat package [gulp-concat](https://www.npmjs.com/package/gulp-concat)
     - Replace package [gulp-replace](https://www.npmjs.com/package/gulp-replace)
     - Del package [del](https://www.npmjs.com/package/del)
     - Fs package [fs](https://www.npmjs.com/package/fs)
