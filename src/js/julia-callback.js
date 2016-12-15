@@ -11,7 +11,7 @@ JuliaBoxItem.prototype._Callback = function(origin)
     {
         data = data||{};
 
-        if( $.inArray(typeof f, ['string', 'function', 'object']) > -1 )
+        if( $.inArray(typeof f, ['string', 'function']) > -1 )
         {
             // Callback defined as function name or function
             // !!! Remember !!!

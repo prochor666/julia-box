@@ -6,10 +6,12 @@ Julia box app builder
 
 // Gulp && plugins
 var gulp = require('gulp');
-var cleanCSS = require('gulp-clean-css');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var minify = require('gulp-minify');
+var replace = require('gulp-replace');
+var del = require('del');
+var fs = require('fs');
 
 // Sources
 var appSrc = [
@@ -20,9 +22,11 @@ var appSrc = [
     'src/js/julia-support.js',
     'src/js/julia-media.js',
     'src/js/julia-events.js',
-    'src/js/julia-fullscreen.js',
-    'src/js/julia-persist.js',
     'src/js/julia-jquery-plugin.js',
+];
+
+var appUMD = [
+    'src/js/julia-umd.js',
 ];
 
 
@@ -42,6 +46,17 @@ gulp.task('sass', function()
 gulp.task('jsbuild', function()
 {
     return gulp.src(appSrc)
+        .pipe(concat('julia-plugin-build.js'))
+        .pipe(gulp.dest('plugin'));
+});
+
+
+gulp.task('finalbuild', function()
+{
+    var pluginContent = fs.readFileSync('plugin/julia-plugin-build.js', 'utf8');
+
+    return gulp.src(appUMD)
+        .pipe(replace('//--JULIA-BOX-SOURCE--', pluginContent))
         .pipe(concat('julia-box.js'))
         .pipe(minify({
             ext:{
@@ -50,12 +65,9 @@ gulp.task('jsbuild', function()
             },
             compress: {
                 properties: false
-            },
-            exclude: ['tmp'],
-            ignoreFiles: ['.combo.js', '.min.js']
-        }))
-        .pipe(gulp.dest('dist/js'));
-});
+            }
+        })).pipe(gulp.dest('dist/js'));
+})
 
 
 // Watch it, Gulp!
@@ -63,4 +75,5 @@ gulp.task('watch', function ()
 {
     gulp.watch('src/scss/*.scss', ['sass']);
     gulp.watch('src/js/*.js', ['jsbuild']);
+    gulp.watch('plugin/julia-plugin-build.js', ['finalbuild']);
 });

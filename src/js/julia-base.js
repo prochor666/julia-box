@@ -1,13 +1,7 @@
 /* *****************************************
 * Julia HTML5 lightbox
 *
-* @author prochor666@gmail.com
-* @version: 0.4.1
-* @build: 2016-11-29
-* @license: MIT
-*
-* @requires:
-* jquery
+* Base objects
 ****************************************** */
 var JuliaBoxItem = function(options)
 {
@@ -94,6 +88,7 @@ var JuliaBoxItem = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
+        version: '0.5.0',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
@@ -131,8 +126,6 @@ var JuliaBoxItem = function(options)
     origin.Support =        new origin._Support(origin);
     origin.Media =          new origin._Media(origin);
     origin.Controls =       new origin._Controls(origin);
-    origin.Persist =        new origin._Persist(origin);
-    origin.Fullscreen =     new origin._Fullscreen(origin);
 
 
     origin.Events.init();
