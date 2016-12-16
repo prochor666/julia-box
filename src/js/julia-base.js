@@ -89,7 +89,7 @@ var JuliaBox = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.3',
+        version: '0.5.5',
         videoAutoplay: origin.options.videoAutoplay,
     };
 

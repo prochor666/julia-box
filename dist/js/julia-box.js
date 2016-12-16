@@ -2,7 +2,7 @@
 * JuliaBox - HTML5 lightbox
 *
 * @author prochor666@gmail.com
-* @version: 0.5.3
+* @version: 0.5.5
 * @build: 2016-12-16
 * @license: MIT
 *
@@ -126,7 +126,7 @@ var JuliaBox = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.3',
+        version: '0.5.5',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
