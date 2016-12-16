@@ -58,6 +58,5 @@ $.fn.juliaBox = function( options )
     api.close = function(){ $('.'+masterSelector).find('button.julia-close').click(); };
     api.open = function(){ _collection[0].click(); };
 
-
     return api;
 };

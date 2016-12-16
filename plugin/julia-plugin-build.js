@@ -89,7 +89,7 @@ var JuliaBox = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.2',
+        version: '0.5.3',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
@@ -1206,7 +1206,6 @@ $.fn.juliaBox = function( options )
     api.prev = function(){ $('.'+masterSelector).find('button.julia-previous').click(); };
     api.close = function(){ $('.'+masterSelector).find('button.julia-close').click(); };
     api.open = function(){ _collection[0].click(); };
-
 
     return api;
 };
