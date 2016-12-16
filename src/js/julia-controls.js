@@ -1,8 +1,8 @@
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * Virtual controls
 ****************************************** */
-JuliaBoxItem.prototype._Controls = function(origin)
+JuliaBox.prototype._Controls = function(origin)
 {
     var self = this;
 
@@ -12,6 +12,8 @@ JuliaBoxItem.prototype._Controls = function(origin)
     self.press = function(action, data)
     {
         data = data||{};
+
+        origin.env.collection.removeClass('julia-box-initiator');
 
         origin.Base.debug({
             'action': action,
@@ -38,12 +40,14 @@ JuliaBoxItem.prototype._Controls = function(origin)
 
                 if(origin.options.onNext !== false)
                 {
-                    origin.Callback.fn(origin.options.onNext, origin.env);
+                    origin.Callback.fn(origin.options.onNext);
                 }
 
                 origin.Events.keysOff();
                 origin.env.instance.remove();
                 origin.env.collection[index].click();
+
+                return index;
 
             break; case 'previous':
 
@@ -57,12 +61,14 @@ JuliaBoxItem.prototype._Controls = function(origin)
 
                 if(origin.options.onPrevious !== false)
                 {
-                    origin.Callback.fn(origin.options.onPrevious, origin.env);
+                    origin.Callback.fn(origin.options.onPrevious);
                 }
 
                 origin.Events.keysOff();
                 origin.env.instance.remove();
                 origin.env.collection[index].click();
+
+                return index;
 
             break; case 'close':
 
@@ -70,7 +76,7 @@ JuliaBoxItem.prototype._Controls = function(origin)
 
                 if(origin.options.onClose !== false)
                 {
-                    origin.Callback.fn(origin.options.onClose, origin.env);
+                    origin.Callback.fn(origin.options.onClose);
                 }
 
                 origin.env.instance.hide( 75, function()
@@ -81,8 +87,10 @@ JuliaBoxItem.prototype._Controls = function(origin)
                         'overflow': origin.env.overflow
                     });
 
-                    origin.env.root.find('[data-julia-box-initiator]').removeData('julia-box-initiator');
+                    $('.julia-virtual-gallery').remove();
                 });
+
+                return origin.env.itemIndex;
 
             break; case 'fullscreen-on':
 

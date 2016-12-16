@@ -2,8 +2,8 @@
 * JuliaBox - HTML5 lightbox
 *
 * @author prochor666@gmail.com
-* @version: 0.5.1
-* @build: 2016-12-15
+* @version: 0.5.2
+* @build: 2016-12-16
 * @license: MIT
 *
 * @require: jquery
@@ -36,11 +36,11 @@
 {
 
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 *
 * Base objects
 ****************************************** */
-var JuliaBoxItem = function(options)
+var JuliaBox = function(options)
 {
     var origin = this;
 
@@ -70,6 +70,7 @@ var JuliaBoxItem = function(options)
         itemIndex: 0,
         onClose: false,
         onInit: false,
+        onCreate: false,
         onNext: false,
         onPrevious: false,
         overlayActive: true,
@@ -93,8 +94,8 @@ var JuliaBoxItem = function(options)
         collection: origin.options.collection,
         i18n: origin.options.i18n,
         ID: __JULIA_INSTANCE__ID__,
+        collectionID: origin.options.collectionID,
         iframeWidthLimit: origin.options.iframeWidthLimit,
-        initiator: false,
         instance: {},
         item: origin.options.item,
         itemIndex: origin.options.itemIndex,
@@ -125,7 +126,7 @@ var JuliaBoxItem = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.1',
+        version: '0.5.2',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
@@ -167,15 +168,12 @@ var JuliaBoxItem = function(options)
 
     origin.Events.init();
 
+    if(origin.options.onInit !== false && origin.env.itemIndex == 0)
+    {
+        origin.Callback.fn( origin.options.onInit );
+    }
 
-    // Define publicApi
-    publicApi = {
-        ID: origin.env.ID,
-        Controls: origin.Controls,
-        env: origin.env
-    };
-
-    return publicApi;
+    return origin.env;
 };
 
 
@@ -184,7 +182,7 @@ var JuliaBoxItem = function(options)
 
 
 
-var JuliaBox = function(options)
+var JuliaBoxVirtual = function(options)
 {
     options = typeof options === 'undefined' ? {}: options;
 
@@ -277,7 +275,7 @@ var JuliaBox = function(options)
 
 
 
-    _collection = $('<div class="---julia-virtual-gallery-'+__VIRTUAL_ID__+'---" style="display: none;" />');
+    _collection = $('<div class="---julia-virtual-gallery-'+__VIRTUAL_ID__+'--- julia-virtual-gallery" style="display: none;" />');
 
 
     for( index in _options.sources )
@@ -293,11 +291,11 @@ var JuliaBox = function(options)
 };
 
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * User interface
 * complete DOM model
 ****************************************** */
-JuliaBoxItem.prototype._Ui = function(origin)
+JuliaBox.prototype._Ui = function(origin)
 {
     var self = this;
 
@@ -312,7 +310,7 @@ JuliaBoxItem.prototype._Ui = function(origin)
         }
 
         // Main container
-        origin.env.instance = $('<div class="julia-box julia-fullscreen-off" id="julia-box-'+origin.env.ID+'">'
+        origin.env.instance = $('<div class="julia-box julia-fullscreen-off julia-box-'+origin.env.collectionID+'" id="julia-box-'+origin.env.ID+'">'
                     +'</div>');
 
         // Containers
@@ -396,8 +394,6 @@ JuliaBoxItem.prototype._Ui = function(origin)
         self.zIndexize();
 
         origin.env.root.append( origin.env.instance );
-
-        origin.env.fullscreenFrame = document.querySelector('#julia-box-'+origin.env.ID);
 
         origin.Ui.state(origin.env.instance, '', 'on');
 
@@ -496,11 +492,11 @@ JuliaBoxItem.prototype._Ui = function(origin)
 };
 
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * Callback
 * event callbacks
 ****************************************** */
-JuliaBoxItem.prototype._Callback = function(origin)
+JuliaBox.prototype._Callback = function(origin)
 {
     var self = this;
 
@@ -518,7 +514,7 @@ JuliaBoxItem.prototype._Callback = function(origin)
                 f = window[f];
             }
 
-            f(origin.options, origin.env, data);
+            f( origin.env );
 
             origin.Base.debug({
                 'Callback': typeof f+' raised'
@@ -534,10 +530,10 @@ JuliaBoxItem.prototype._Callback = function(origin)
 };
 
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * Virtual controls
 ****************************************** */
-JuliaBoxItem.prototype._Controls = function(origin)
+JuliaBox.prototype._Controls = function(origin)
 {
     var self = this;
 
@@ -547,6 +543,8 @@ JuliaBoxItem.prototype._Controls = function(origin)
     self.press = function(action, data)
     {
         data = data||{};
+
+        origin.env.collection.removeClass('julia-box-initiator');
 
         origin.Base.debug({
             'action': action,
@@ -573,12 +571,14 @@ JuliaBoxItem.prototype._Controls = function(origin)
 
                 if(origin.options.onNext !== false)
                 {
-                    origin.Callback.fn(origin.options.onNext, origin.env);
+                    origin.Callback.fn(origin.options.onNext);
                 }
 
                 origin.Events.keysOff();
                 origin.env.instance.remove();
                 origin.env.collection[index].click();
+
+                return index;
 
             break; case 'previous':
 
@@ -592,12 +592,14 @@ JuliaBoxItem.prototype._Controls = function(origin)
 
                 if(origin.options.onPrevious !== false)
                 {
-                    origin.Callback.fn(origin.options.onPrevious, origin.env);
+                    origin.Callback.fn(origin.options.onPrevious);
                 }
 
                 origin.Events.keysOff();
                 origin.env.instance.remove();
                 origin.env.collection[index].click();
+
+                return index;
 
             break; case 'close':
 
@@ -605,7 +607,7 @@ JuliaBoxItem.prototype._Controls = function(origin)
 
                 if(origin.options.onClose !== false)
                 {
-                    origin.Callback.fn(origin.options.onClose, origin.env);
+                    origin.Callback.fn(origin.options.onClose);
                 }
 
                 origin.env.instance.hide( 75, function()
@@ -616,8 +618,10 @@ JuliaBoxItem.prototype._Controls = function(origin)
                         'overflow': origin.env.overflow
                     });
 
-                    origin.env.root.find('[data-julia-box-initiator]').removeData('julia-box-initiator');
+                    $('.julia-virtual-gallery').remove();
                 });
+
+                return origin.env.itemIndex;
 
             break; case 'fullscreen-on':
 
@@ -635,10 +639,10 @@ JuliaBoxItem.prototype._Controls = function(origin)
 };
 
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * Suppport utilities
 ****************************************** */
-JuliaBoxItem.prototype._Support = function(origin)
+JuliaBox.prototype._Support = function(origin)
 {
     var self = this;
 
@@ -696,15 +700,6 @@ JuliaBoxItem.prototype._Support = function(origin)
 
 
 
-    self.initiator = function()
-    {
-        l = origin.env.root.find('[data-julia-box-initiator]').length;
-        return !l ? 0: l;
-    };
-
-
-
-
     self.isUrlValid = function(url)
     {
         return url.match("^\/");
@@ -746,10 +741,10 @@ JuliaBoxItem.prototype._Support = function(origin)
 };
 
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * Media collection processing
 ****************************************** */
-JuliaBoxItem.prototype._Media = function(origin)
+JuliaBox.prototype._Media = function(origin)
 {
     var self = this;
 
@@ -1026,10 +1021,10 @@ JuliaBoxItem.prototype._Media = function(origin)
 };
 
 /* *****************************************
-* Julia HTML5 lightbox
-* DOM & api event handlers and emmiters
+* JuliaBox HTML5 lightbox
+* DOM & api events
 ****************************************** */
-JuliaBoxItem.prototype._Events = function(origin)
+JuliaBox.prototype._Events = function(origin)
 {
     var self = this;
 
@@ -1043,11 +1038,6 @@ JuliaBoxItem.prototype._Events = function(origin)
         {
             e.preventDefault();
 
-            if( origin.Support.initiator() == 0 )
-            {
-                origin.env.item.data('julia-box-initiator', 'True');
-            }
-
             origin.env.root.css({
                 'overflow': 'hidden'
             });
@@ -1059,12 +1049,13 @@ JuliaBoxItem.prototype._Events = function(origin)
             $('#julia-box-'+origin.env.ID).on( 'julia.ui-ready' , function()
             {
                 origin.Media.getMedia();
-            });
+                origin.env.item.addClass('julia-box-initiator');
 
-            if(origin.options.onInit !== false)
-            {
-                origin.Callback.fn( origin.options.onInit, origin.env );
-            }
+                if(origin.options.onCreate !== false)
+                {
+                    origin.Callback.fn(origin.options.onCreate);
+                }
+            });
 
             origin.env.model.buttons.close.focus();
 
@@ -1205,7 +1196,7 @@ JuliaBoxItem.prototype._Events = function(origin)
     $.extend({
         juliaBox: function ( options )
         {
-            return new JuliaBox( options );
+            return new JuliaBoxVirtual( options );
         }
     });
 })($);
@@ -1215,7 +1206,10 @@ JuliaBoxItem.prototype._Events = function(origin)
 $.fn.juliaBox = function( options )
 {
     var _collection = this;
-    var result = [];
+    var api = {};
+
+    var __JULIA_COLLECTION__ID__ = Math.floor((Math.random()*10000000)+1);
+    var masterSelector = 'juliabox-collection-' + __JULIA_COLLECTION__ID__;
 
     this.each( function( index )
     {
@@ -1228,20 +1222,29 @@ $.fn.juliaBox = function( options )
         // Build some opts
         options = typeof options === 'undefined' ? {}: options;
         options.collection = _collection;
+        options.collectionID = __JULIA_COLLECTION__ID__;
         options.item = $(this);
         options.itemIndex = index;
 
         // Pass options to constructor
-        var juliaBoxInstance = new JuliaBoxItem( options, true );
+        var juliaBoxInstance = new JuliaBox( options );
 
         // Store plugin object in element's data
-        $(this).data('juliabox', juliaBoxInstance);
-
-        // Add item into collection
-        result.push( juliaBoxInstance );
+        $(this)
+        .addClass(masterSelector)
+        .data({
+            'juliabox': juliaBoxInstance,
+            'juliabox-index': index,
+            'juliabox-collection': __JULIA_COLLECTION__ID__
+        });
     });
 
-    return result;
+    api.next = function(){ $('.'+masterSelector).find('button.julia-next').click(); };
+    api.prev = function(){ $('.'+masterSelector).find('button.julia-previous').click(); };
+    api.close = function(){ $('.'+masterSelector).find('button.julia-close').click(); };
+    api.open = function(){ _collection[0].click(); };
+
+    return api;
 };
 
 

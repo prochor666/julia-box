@@ -1,9 +1,9 @@
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * User interface
 * complete DOM model
 ****************************************** */
-JuliaBoxItem.prototype._Ui = function(origin)
+JuliaBox.prototype._Ui = function(origin)
 {
     var self = this;
 
@@ -18,7 +18,7 @@ JuliaBoxItem.prototype._Ui = function(origin)
         }
 
         // Main container
-        origin.env.instance = $('<div class="julia-box julia-fullscreen-off" id="julia-box-'+origin.env.ID+'">'
+        origin.env.instance = $('<div class="julia-box julia-fullscreen-off julia-box-'+origin.env.collectionID+'" id="julia-box-'+origin.env.ID+'">'
                     +'</div>');
 
         // Containers
@@ -102,8 +102,6 @@ JuliaBoxItem.prototype._Ui = function(origin)
         self.zIndexize();
 
         origin.env.root.append( origin.env.instance );
-
-        origin.env.fullscreenFrame = document.querySelector('#julia-box-'+origin.env.ID);
 
         origin.Ui.state(origin.env.instance, '', 'on');
 

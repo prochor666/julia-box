@@ -1,8 +1,8 @@
 /* *****************************************
-* Julia HTML5 lightbox
-* DOM & api event handlers and emmiters
+* JuliaBox HTML5 lightbox
+* DOM & api events
 ****************************************** */
-JuliaBoxItem.prototype._Events = function(origin)
+JuliaBox.prototype._Events = function(origin)
 {
     var self = this;
 
@@ -16,11 +16,6 @@ JuliaBoxItem.prototype._Events = function(origin)
         {
             e.preventDefault();
 
-            if( origin.Support.initiator() == 0 )
-            {
-                origin.env.item.data('julia-box-initiator', 'True');
-            }
-
             origin.env.root.css({
                 'overflow': 'hidden'
             });
@@ -32,12 +27,13 @@ JuliaBoxItem.prototype._Events = function(origin)
             $('#julia-box-'+origin.env.ID).on( 'julia.ui-ready' , function()
             {
                 origin.Media.getMedia();
-            });
+                origin.env.item.addClass('julia-box-initiator');
 
-            if(origin.options.onInit !== false)
-            {
-                origin.Callback.fn( origin.options.onInit, origin.env );
-            }
+                if(origin.options.onCreate !== false)
+                {
+                    origin.Callback.fn(origin.options.onCreate);
+                }
+            });
 
             origin.env.model.buttons.close.focus();
 

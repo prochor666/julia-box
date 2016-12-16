@@ -1,9 +1,9 @@
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * Callback
 * event callbacks
 ****************************************** */
-JuliaBoxItem.prototype._Callback = function(origin)
+JuliaBox.prototype._Callback = function(origin)
 {
     var self = this;
 
@@ -21,7 +21,7 @@ JuliaBoxItem.prototype._Callback = function(origin)
                 f = window[f];
             }
 
-            f(origin.options, origin.env, data);
+            f( origin.env );
 
             origin.Base.debug({
                 'Callback': typeof f+' raised'

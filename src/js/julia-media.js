@@ -1,8 +1,8 @@
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * Media collection processing
 ****************************************** */
-JuliaBoxItem.prototype._Media = function(origin)
+JuliaBox.prototype._Media = function(origin)
 {
     var self = this;
 

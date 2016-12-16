@@ -1,8 +1,8 @@
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 * Suppport utilities
 ****************************************** */
-JuliaBoxItem.prototype._Support = function(origin)
+JuliaBox.prototype._Support = function(origin)
 {
     var self = this;
 
@@ -55,15 +55,6 @@ JuliaBoxItem.prototype._Support = function(origin)
     self.iframe = function( iframeSrc, serviceClass )
     {
         return $('<div class="julia-iframe-container julia-box-'+serviceClass+'"><iframe frameborder="0" width="100%" height="100%" allowfullscreen src="' + iframeSrc + '"/></div>');
-    };
-
-
-
-
-    self.initiator = function()
-    {
-        l = origin.env.root.find('[data-julia-box-initiator]').length;
-        return !l ? 0: l;
     };
 
 

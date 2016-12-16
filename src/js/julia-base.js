@@ -1,9 +1,9 @@
 /* *****************************************
-* Julia HTML5 lightbox
+* JuliaBox HTML5 lightbox
 *
 * Base objects
 ****************************************** */
-var JuliaBoxItem = function(options)
+var JuliaBox = function(options)
 {
     var origin = this;
 
@@ -33,6 +33,7 @@ var JuliaBoxItem = function(options)
         itemIndex: 0,
         onClose: false,
         onInit: false,
+        onCreate: false,
         onNext: false,
         onPrevious: false,
         overlayActive: true,
@@ -56,8 +57,8 @@ var JuliaBoxItem = function(options)
         collection: origin.options.collection,
         i18n: origin.options.i18n,
         ID: __JULIA_INSTANCE__ID__,
+        collectionID: origin.options.collectionID,
         iframeWidthLimit: origin.options.iframeWidthLimit,
-        initiator: false,
         instance: {},
         item: origin.options.item,
         itemIndex: origin.options.itemIndex,
@@ -88,7 +89,7 @@ var JuliaBoxItem = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.1',
+        version: '0.5.2',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
@@ -130,15 +131,12 @@ var JuliaBoxItem = function(options)
 
     origin.Events.init();
 
+    if(origin.options.onInit !== false && origin.env.itemIndex == 0)
+    {
+        origin.Callback.fn( origin.options.onInit );
+    }
 
-    // Define publicApi
-    publicApi = {
-        ID: origin.env.ID,
-        Controls: origin.Controls,
-        env: origin.env
-    };
-
-    return publicApi;
+    return origin.env;
 };
 
 
@@ -147,7 +145,7 @@ var JuliaBoxItem = function(options)
 
 
 
-var JuliaBox = function(options)
+var JuliaBoxVirtual = function(options)
 {
     options = typeof options === 'undefined' ? {}: options;
 
@@ -240,7 +238,7 @@ var JuliaBox = function(options)
 
 
 
-    _collection = $('<div class="---julia-virtual-gallery-'+__VIRTUAL_ID__+'---" style="display: none;" />');
+    _collection = $('<div class="---julia-virtual-gallery-'+__VIRTUAL_ID__+'--- julia-virtual-gallery" style="display: none;" />');
 
 
     for( index in _options.sources )
