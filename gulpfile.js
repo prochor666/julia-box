@@ -68,7 +68,7 @@ gulp.task('finalbuild', function()
                 properties: false
             }
         })).pipe(gulp.dest('dist/js'));
-})
+});
 
 
 // Watch it, Gulp!

@@ -164,7 +164,7 @@ JuliaBox.prototype._Ui = function(origin)
     {
         var indexHighest = 0;
 
-        $("*").each(function()
+        $(":visible").each(function()
         {
             // always use a radix when using parseInt
             var _current = parseInt( $(this).css("z-index"), 10 );
@@ -178,6 +178,12 @@ JuliaBox.prototype._Ui = function(origin)
         origin.Base.debug({
             'Highest z-index': indexHighest
         });
+
+        // Fix for highest 32bit integer
+        if( indexHighest >= 2147483647 )
+        {
+            indexHighest = indexHighest - 5;
+        }
 
         origin.env.instance.css({
             'z-index': indexHighest + 1

@@ -89,7 +89,7 @@ var JuliaBox = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.6',
+        version: '0.5.7',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
@@ -152,7 +152,107 @@ var JuliaBoxVirtual = function(options)
     // Default origin.options
     var _options = {
         sources: {},
-        attr: '
+        attr: 'href',
+        root: $('body'),
+    };
+
+    var __VIRTUAL_ID__ = Math.floor((Math.random()*10000000)+1);
+
+    // Extend default origin.options with external options
+    $.extend(true, _options, options);
+
+
+
+
+
+    var isDOMElement = function( obj )
+    {
+        var _checkInstance = function(elem)
+        {
+            if( ( elem instanceof jQuery && elem.length ) || elem instanceof HTMLElement )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        if( obj instanceof HTMLCollection && obj.length )
+        {
+                for( var a = 0, len = obj.length; a < len; a++ )
+                {
+
+                if( !_checkInstance( obj[a] ) )
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
+        } else {
+
+            return _checkInstance( obj );
+        }
+    };
+
+
+
+
+    var normalize = function( item )
+    {
+        var norm = $('<a />');
+
+        if( typeof item === 'string' )
+        {
+            norm.attr( _options.attr, item );
+        }
+
+        if( ( typeof item === 'object' && !isDOMElement( item ) ) )
+        {
+            if( item.hasOwnProperty('href')  )
+            {
+                norm.attr( _options.attr, item.href );
+
+            }else if( item.hasOwnProperty('src') )
+            {
+                norm.attr( _options.attr, item.src );
+            }
+
+            if( item.hasOwnProperty('title')  )
+            {
+                norm.attr( 'title', item.title );
+            }else{
+                norm.attr( 'title', '' );
+            }
+        }
+
+        norm.css({
+            'display': 'none'
+        });
+
+        return norm;
+    };
+
+
+
+
+
+    _collection = $('<div class="---julia-virtual-gallery-'+__VIRTUAL_ID__+'--- julia-virtual-gallery" style="display: none;" />');
+
+
+    for( index in _options.sources )
+    {
+        _item = normalize( _options.sources[index] );
+        _collection.append( _item );
+    }
+
+    _options.root.append( _collection );
+    result = _collection.find('a').juliaBox( _options );
+
+    return result;
+};
+
 /* *****************************************
 * JuliaBox HTML5 lightbox
 * User interface
@@ -319,7 +419,7 @@ JuliaBox.prototype._Ui = function(origin)
     {
         var indexHighest = 0;
 
-        $("*").each(function()
+        $(":visible").each(function()
         {
             // always use a radix when using parseInt
             var _current = parseInt( $(this).css("z-index"), 10 );
@@ -333,6 +433,12 @@ JuliaBox.prototype._Ui = function(origin)
         origin.Base.debug({
             'Highest z-index': indexHighest
         });
+
+        // Fix for highest 32bit integer
+        if( indexHighest >= 2147483647 )
+        {
+            indexHighest = indexHighest - 5;
+        }
 
         origin.env.instance.css({
             'z-index': indexHighest + 1

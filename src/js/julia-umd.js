@@ -2,8 +2,8 @@
 * JuliaBox - HTML5 lightbox
 *
 * @author prochor666@gmail.com
-* @version: 0.5.6
-* @build: 2016-12-16
+* @version: 0.5.7
+* @build: 2017-01-05
 * @license: MIT
 *
 * @require: jquery

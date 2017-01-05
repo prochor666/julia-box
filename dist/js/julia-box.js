@@ -2,8 +2,8 @@
 * JuliaBox - HTML5 lightbox
 *
 * @author prochor666@gmail.com
-* @version: 0.5.6
-* @build: 2016-12-16
+* @version: 0.5.7
+* @build: 2017-01-05
 * @license: MIT
 *
 * @require: jquery
@@ -126,7 +126,7 @@ var JuliaBox = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.5',
+        version: '0.5.7',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
@@ -456,7 +456,7 @@ JuliaBox.prototype._Ui = function(origin)
     {
         var indexHighest = 0;
 
-        $("*").each(function()
+        $(":visible").each(function()
         {
             // always use a radix when using parseInt
             var _current = parseInt( $(this).css("z-index"), 10 );
@@ -470,6 +470,12 @@ JuliaBox.prototype._Ui = function(origin)
         origin.Base.debug({
             'Highest z-index': indexHighest
         });
+
+        // Fix for highest 32bit integer
+        if( indexHighest >= 2147483647 )
+        {
+            indexHighest = indexHighest - 5;
+        }
 
         origin.env.instance.css({
             'z-index': indexHighest + 1

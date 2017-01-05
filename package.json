@@ -1,6 +1,6 @@
 {
   "name": "juliabox",
-  "version": "0.5.6,
+  "version": "0.5.6",
   "description": "Responsive, mobile ready lightbox",
   "main": "dist/js/julia-box.js",
   "scripts": {
