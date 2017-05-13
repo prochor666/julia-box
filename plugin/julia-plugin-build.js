@@ -89,7 +89,7 @@ var JuliaBox = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.7',
+        version: '0.5.8',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
@@ -435,7 +435,7 @@ JuliaBox.prototype._Ui = function(origin)
         });
 
         // Fix for highest 32bit integer
-        if( indexHighest >= 2147483647 )
+        if( indexHighest >= 2147483606 )
         {
             indexHighest = indexHighest - 5;
         }

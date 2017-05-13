@@ -180,7 +180,7 @@ JuliaBox.prototype._Ui = function(origin)
         });
 
         // Fix for highest 32bit integer
-        if( indexHighest >= 2147483647 )
+        if( indexHighest >= 2147483606 )
         {
             indexHighest = indexHighest - 5;
         }

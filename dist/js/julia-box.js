@@ -2,8 +2,8 @@
 * JuliaBox - HTML5 lightbox
 *
 * @author prochor666@gmail.com
-* @version: 0.5.7
-* @build: 2017-01-05
+* @version: 0.5.8
+* @build: 2017-05-13
 * @license: MIT
 *
 * @require: jquery
@@ -126,7 +126,7 @@ var JuliaBox = function(options)
         },
         timeout: origin.options.timeout,
         timer: false,
-        version: '0.5.7',
+        version: '0.5.8',
         videoAutoplay: origin.options.videoAutoplay,
     };
 
@@ -472,7 +472,7 @@ JuliaBox.prototype._Ui = function(origin)
         });
 
         // Fix for highest 32bit integer
-        if( indexHighest >= 2147483647 )
+        if( indexHighest >= 2147483606 )
         {
             indexHighest = indexHighest - 5;
         }
